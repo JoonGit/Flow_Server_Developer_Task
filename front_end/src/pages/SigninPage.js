@@ -1,16 +1,16 @@
 import React from "react";
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import { changeId } from "../redux/store";
 import { useDispatch } from "react-redux";
+import { PostAndMoveAndReduxSave } from "../axios/post";
 
 function SigninPage() {
-  const [id, setId] = useState("");
-  const [pw, setPw] = useState("");
+  const [userId, setId] = useState("");
+  const [password, setPw] = useState("");
   const navigate = useNavigate();
-  let dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleIdChange = (e) => {
     setId(e.target.value);
@@ -21,34 +21,34 @@ function SigninPage() {
   };
 
   const handleSubmit = (e) => {
-    const data = {
-      id: id,
-      password: pw,
-    };
-    // POST 요청을 보낼 엔드포인트 URL
-    const url = process.env.REACT_APP_BACKEND_URL + "user/signin";
-    dispatch(changeId(id));
-    navigate("/main");
-    // JSON 데이터와 함께 POST 요청 보내기
-    // axios
-    //   .post(url, data, {
-    //     headers: {
-    //       "Content-Type": "application/json", // 데이터가 JSON 형식임을 지정
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log("토큰 : .", response.data);
-    //     if (response.data === "success") {
-    //       dispatch(changeId(id));
+    e.preventDefault();
 
-    //       navigate("/main");
-    //     } else {
-    //       alert("로그인에 실패했습니다.");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("로그인 실패 : ", error);
-    //   });
+    const userData = {
+      userId,
+      password,
+    };
+
+    sendSigninData(userData);
+  };
+
+  // 백엔드로 로그인 데이터 보내기
+  const sendSigninData = (userData) => {
+    const url = process.env.REACT_APP_BACKEND_URL + "user/login";
+
+    let moveUrl = "/main";
+    PostAndMoveAndReduxSave(
+      url,
+      moveUrl,
+      userData,
+      navigate,
+      dispatch,
+      changeId,
+      userId
+    );
+  };
+
+  const handleSignup = () => {
+    navigate("/signup");
   };
   return (
     <Container fluid className="text-center">
@@ -60,26 +60,43 @@ function SigninPage() {
             </Card.Header>
             <Card.Body>
               <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Label>ID</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter Id"
-                    value={id}
-                    onChange={handleIdChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBasicPassword">
-                  <Form.Label>비밀번호</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={pw}
-                    onChange={handlePwChange}
-                  />
-                </Form.Group>
+                <Row className="justify-content-center">
+                  <Col className="pr-1" md="10">
+                    <Form.Group>
+                      <Col md="1" style={{ padding: "6px" }}>
+                        <label htmlFor="id">ID</label>
+                      </Col>
+                      <Form.Control
+                        type="text"
+                        id="userId"
+                        value={userId}
+                        onChange={handleIdChange}
+                      ></Form.Control>
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col className="pr-1" md="10">
+                    <Form.Group>
+                      <Col md="1" style={{ padding: "6px" }}>
+                        <label htmlFor="password">Password</label>
+                      </Col>
+                      <Form.Control
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={handlePwChange}
+                      ></Form.Control>
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <br />
                 <Button variant="primary" type="submit">
                   로그인
+                </Button>
+                <p></p>
+                <Button variant="secondary" onClick={handleSignup}>
+                  회원가입페이지 이동
                 </Button>
               </Form>
             </Card.Body>

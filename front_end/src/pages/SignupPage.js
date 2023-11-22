@@ -1,29 +1,18 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { PostAndMove } from "../axios/post";
 
 // react-bootstrap components
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 
 function SignupPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [id, setId] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPw] = useState("");
   const navigate = useNavigate();
-  // const [userData, setUserData] = useState('');
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
 
   const handleIdChange = (e) => {
-    setId(e.target.value);
+    setUserId(e.target.value);
   };
 
   const handlePwChange = (e) => {
@@ -32,16 +21,9 @@ function SignupPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // 여기에서 name, email, id, pw를 처리하거나 서버로 보낼 수 있습니다.
-    console.log("이름:", name);
-    console.log("이메일:", email);
-    console.log("아이디:", id);
-    console.log("비밀번호:", password);
 
     const userData = {
-      name,
-      email,
-      id,
+      userId,
       password,
     };
     sendSignupData(userData);
@@ -49,28 +31,12 @@ function SignupPage() {
 
   // 백엔드로 회원가입 데이터 보내기
   const sendSignupData = (userData) => {
-    navigate("/signin");
-
-    // const url = process.env.REACT_APP_BACKEND_URL + "user/signup";
-    // console.log(url);
-    // // JSON 데이터와 함께 POST 요청 보내기
-    // axios
-    //   .post(url, userData, {
-    //     headers: {
-    //       "Content-Type": "application/json", // 데이터가 JSON 형식임을 지정
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     if (response.data === "success") {
-    //       navigate("/signin");
-    //     } else {
-    //       alert("회원가입에 실패했습니다.");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("회원가입 실패 : ", error);
-    //   });
+    if (userData.userId.trim() === "" || userData.password.trim() === "") {
+      return alert("userId 또는 password가 공백입니다.");
+    }
+    const url = process.env.REACT_APP_BACKEND_URL + "user/signup";
+    const moveUrl = "/";
+    PostAndMove(url, moveUrl, userData, navigate);
   };
 
   return (
@@ -88,42 +54,12 @@ function SignupPage() {
                     <Col className="pr-1" md="10">
                       <Form.Group>
                         <Col md="1" style={{ padding: "6px" }}>
-                          <label htmlFor="name">Name</label>
-                        </Col>
-                        <Form.Control
-                          type="text"
-                          id="name"
-                          value={name}
-                          onChange={handleNameChange}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row className="justify-content-center">
-                    <Col className="pr-1" md="10">
-                      <Form.Group>
-                        <Col md="1" style={{ padding: "6px" }}>
-                          <label htmlFor="email">Email</label>
-                        </Col>
-                        <Form.Control
-                          type="email"
-                          id="email"
-                          value={email}
-                          onChange={handleEmailChange}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row className="justify-content-center">
-                    <Col className="pr-1" md="10">
-                      <Form.Group>
-                        <Col md="1" style={{ padding: "6px" }}>
                           <label htmlFor="id">ID</label>
                         </Col>
                         <Form.Control
                           type="text"
-                          id="id"
-                          value={id}
+                          id="userId"
+                          value={userId}
                           onChange={handleIdChange}
                         ></Form.Control>
                       </Form.Group>

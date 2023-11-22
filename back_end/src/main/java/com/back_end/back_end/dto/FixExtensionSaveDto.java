@@ -1,30 +1,28 @@
 package com.back_end.back_end.dto;
 
-import com.back_end.back_end.Entity.ExtensionEntity;
+import com.back_end.back_end.Entity.FixedExtensionEntity;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @JsonAutoDetect
 @Getter
 @NoArgsConstructor
-public class ExtensionSaveDto {
+public class FixExtensionSaveDto {
     private String name;
 
 
     @Builder
-    public ExtensionSaveDto(
+    public FixExtensionSaveDto(
             String name
             ) {
         this.name = name;
 
     }
 
-    public ExtensionEntity toEntity() {
-        return ExtensionEntity.builder()
+    public FixedExtensionEntity toEntity() {
+        return FixedExtensionEntity.builder()
                 .name(name)
                 .build();
     }

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { changeId } from "../redux/store";
-
 import { useDispatch } from "react-redux";
+import { GetData, PostData } from "../axios/mainAxios";
 
 // 유저 정보는 로그인시 redux에 저장되서 가져오기
 // 페이지가 불러올 때 WAS에서
@@ -16,32 +15,33 @@ function MainPage() {
   let dispatch = useDispatch();
 
   // DB 에서 고정 목록 가져올 예정
-  let [defaultwordList, setDefaultList] = useState([
-    ".bat",
-    ".cmd",
-    ".com",
-    ".cpl",
-    ".exe",
-    ".scr",
-    ".js",
-  ]);
+  let [fixedExtensionList, setFixedExtensionList] = useState();
   let forbiddenWord = ["<", ">", ":", '"', "/", "\\", "|", "?", "*", " "];
-  let id = useSelector((state) => state.userId); // 로그인한 유저 ID
+  // let id = useSelector((state) => state.userId); // 로그인한 유저 ID
+  let id = "user";
 
   const [inputText, setInputText] = useState(""); // 입력된 텍스트 관리
   const maxInputTextLength = 20;
 
   // DB에서 커스텀으로 만들어진 목록 가져올 예정
-  const [customList, setCustomList] = useState([]); // 생성된 div 목록 관리
+  const [customList, setCustomList] = useState(); // 생성된 div 목록 관리
   const [customListLength, setCustomListLength] = useState(0); // divList의 현재 갯수 상태 관리
   const maxCustomListLength = 200;
 
   useEffect(() => {
+    // const url = process.env.REACT_APP_BACKEND_URL + "extension/getinfo?" + id;
+    let url = process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
+    GetData(url, setFixedExtensionList);
+    url = process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
+    GetData(url, setCustomList);
+    customList && setCustomListLength(customList.customExtensionName.length);
     // 1. 고정확장자 checkList
     // 2. 커스텀 확장자 List
   }, []);
+
   useEffect(() => {
-    setCustomListLength(customList.length); // divList의 길이 변경 시 divListLength 갱신
+    customList && setCustomListLength(customList.customExtensionName.length); // divList의 길이 변경 시 divListLength 갱신
+    console.log("변경후 실행");
   }, [customList]);
 
   const handleInputChange = (e) => {
@@ -72,43 +72,101 @@ function MainPage() {
     } else if (lowerCase[0] !== ".") {
       // 마침표으로 시작하지 않으면 불가능
       alert("올바른 파일 형식이 아닙니다(마침표로 시작하는지 확인해 주세요)");
-    } else if (defaultwordList.some((word) => lowerCase === word)) {
+    } else if (
+      fixedExtensionList.fixedExtensionName.some((word) => lowerCase === word)
+    ) {
       // 고장확장자에 있으면 생성하지 않는다
       alert("고정 확장자에 있는 확장자 입니다");
-    } else if (customList.some((word) => lowerCase === word)) {
+    } else if (
+      customList &&
+      customList.customExtensionName &&
+      customList.customExtensionName.some((word) => lowerCase === word)
+    ) {
       // 커스텀 확장자에 있으면 생성하지 않는다
       alert("이미 만들어진 확장자 입니다");
     } else {
       // 공백이면 넣지 않는다
       // was로 전송할 코드 생성
+      const url = process.env.REACT_APP_BACKEND_URL + "custom/save";
+      const data = {
+        userId: id,
+        name: lowerCase,
+      };
+      PostData(url, data).then(() => {
+        const url =
+          process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
+        GetData(url, setCustomList);
+      });
 
+      customList && setCustomListLength(customList.customExtensionName.length);
+      // setCustomList([...customList, lowerCase]);
+      setInputText("");
       //성공시 div로 데이터 만들기
-      setCustomList([...customList, lowerCase]); // 기존의 div 목록에 새로운 div 추가
-      setInputText(""); // 입력 필드 초기화
+      // 기존의 div 목록에 새로운 div 추가
+      // 입력 필드 초기화
     }
   };
 
   // 커스텀 삭제
   const deleteDiv = (index) => {
     // 삭제시 안내문구 만들기
-    const deletedText = customList[index]; // 삭제될 div의 text
+    console.log();
+    const deletedText = customList.customExtensionName[index]; // 삭제될 div의 text
     console.log(`Deleted text: ${deletedText}`); // 삭제될 div의 text를 출력
-    const updatedDivList = customList.filter((_, i) => i !== index); // 삭제할 div를 제외한 목록
-    setCustomList(updatedDivList); // 변경된 div 목록 설정
+    // const updatedDivList = customList.customExtensionName.filter(
+    //   (_, i) => i !== index
+    // );
+    // 삭제할 div를 제외한 목록
+
+    const url = process.env.REACT_APP_BACKEND_URL + "custom/delete";
+    const data = {
+      userId: id,
+      name: deletedText,
+    };
+    PostData(url, data).then(() => {
+      const url =
+        process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
+      GetData(url, setCustomList);
+      setCustomListLength(customList.customExtensionName.length);
+    });
+    // 변경된 div 목록 설정
   };
 
   const handleCheckboxChange = (label) => (e) => {
+    const data = {
+      userId: id,
+      extensionName: label,
+    };
+
     //체크가 되었을떄
     if (e.target.checked) {
-      console.log("Checkbox clicked:", label);
+      const url = process.env.REACT_APP_BACKEND_URL + "fixed/savefixtouser";
+      PostData(url, data)
+        .then(() => {
+          const url =
+            process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
+          GetData(url, setFixedExtensionList);
+        })
+        .catch((error) => {
+          console.error("오류 발생:", error);
+        });
     } else if (!e.target.checked) {
-      console.log("!Checkbox clicked:", label);
+      const url = process.env.REACT_APP_BACKEND_URL + "fixed/deletefixtouser";
+      PostData(url, data)
+        .then(() => {
+          const url =
+            process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
+          GetData(url, setFixedExtensionList);
+        })
+        .catch((error) => {
+          console.error("오류 발생:", error);
+        });
     }
-    // 체크가 해제되었을때
   };
 
   return (
     <div>
+      <h3>현재 로그인한 유저 ID : {id}</h3>
       <div>파일 확장자 차단</div>
       <div>
         파일확장자에 따라 특정 형식의 파일을 첨부하거나 전송하지 못하도록 제한
@@ -116,17 +174,19 @@ function MainPage() {
 
       <div className="mb-3">
         <div>
-          고정 확장자<span></span>
-          {defaultwordList.map((label) => (
-            <label key={label} className="mr-2">
-              {label}
-              <input
-                type="checkbox"
-                onChange={handleCheckboxChange(label)}
-                style={{ marginLeft: "5px" }}
-              />
-            </label>
-          ))}
+          고정 확장자 <span></span>
+          {fixedExtensionList &&
+            fixedExtensionList.fixedExtensionName.map((label, index) => (
+              <label key={label} className="mr-2">
+                {label}
+                <input
+                  type="checkbox"
+                  onChange={handleCheckboxChange(label)}
+                  checked={fixedExtensionList.fixedExtensionStatus[index]}
+                  style={{ marginLeft: "5px" }}
+                />
+              </label>
+            ))}
         </div>
       </div>
       <div>
@@ -139,22 +199,27 @@ function MainPage() {
         <button onClick={createDiv}>텍스트를 추가</button>
         <div>
           <p>
-            divList의 현재 갯수: {customListLength}/{maxCustomListLength}
+            고정확장자의 현재 갯수: {customListLength}/{maxCustomListLength}
           </p>
-          {customList.map((text, index) => (
-            <div
-              key={index}
-              style={{
-                border: "1px solid #000",
-                padding: "5px",
-                margin: "5px",
-                display: "inline-block",
-              }}
-            >
-              {text}
-              <button onClick={() => deleteDiv(index)}>삭제</button>
-            </div>
-          ))}
+          {customList && customList.customExtensionName ? (
+            customList.customExtensionName.map((text, index) => (
+              <div
+                key={index}
+                style={{
+                  border: "1px solid #000",
+                  padding: "5px",
+                  margin: "5px",
+                  display: "inline-block",
+                }}
+              >
+                {text}
+                <button onClick={() => deleteDiv(index)}>삭제</button>
+              </div>
+            ))
+          ) : (
+            // customList가 존재하지 않거나 customExtensionName이 없는 경우에 대한 처리
+            <p>고정확장자가 없습니다.</p>
+          )}
         </div>
       </div>
     </div>
