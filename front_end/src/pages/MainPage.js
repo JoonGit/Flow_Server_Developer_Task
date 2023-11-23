@@ -75,7 +75,7 @@ function MainPage() {
     } else if (lowerCase[0] !== ".") {
       alert("올바른 파일 형식이 아닙니다(마침표로 시작하는지 확인해 주세요)");
     }
-    // 4.고장확장자에 있으면 생성하지 않는다
+    // 4.고정확장자에 있으면 생성하지 않는다
     else if (fixedList.fixedName.some((word) => lowerCase === word)) {
       alert("고정 확장자에 있는 확장자 입니다");
     }
