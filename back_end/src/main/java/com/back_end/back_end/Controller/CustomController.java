@@ -2,6 +2,7 @@ package com.back_end.back_end.Controller;
 
 import com.back_end.back_end.Service.CustomService;
 import com.back_end.back_end.Vo.CustomVo;
+import com.back_end.back_end.dto.CustomDeleteDto;
 import com.back_end.back_end.dto.CustomSaveDto;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class CustomController {
     }
 
     @PostMapping("/delete")
-    public void Delete(@RequestBody CustomSaveDto extensionDto) {
+    public void Delete(@RequestBody CustomDeleteDto extensionDto) {
         customService.Delete(extensionDto);
     }
 

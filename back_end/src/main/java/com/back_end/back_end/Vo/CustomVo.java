@@ -11,9 +11,11 @@ import java.util.List;
 @Builder
 public class CustomVo {
     List<String> customName;
+    String error = "success";
 
-    public CustomVo(List<String> customName) {
+    public CustomVo(List<String> customName, String error) {
         this.customName = customName;
+        this.error = error;
     }
 
 }

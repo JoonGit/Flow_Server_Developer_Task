@@ -5,6 +5,7 @@ import com.back_end.back_end.Entity.FixedEntity;
 import com.back_end.back_end.Entity.UserEntity;
 import com.back_end.back_end.Repository.FixedRepository;
 import com.back_end.back_end.Repository.UserRepository;
+import com.back_end.back_end.Vo.CustomVo;
 import com.back_end.back_end.Vo.FixedVo;
 import com.back_end.back_end.dto.FixedSaveDto;
 import com.back_end.back_end.dto.FixToUserDto;
@@ -26,91 +27,143 @@ public class FixedService {
         this.userRepository = userRepository;
         this.fixedRepository = fixedRepository;
     }
-    public void Save(FixedSaveDto requestDto) {
-        fixedRepository.save(requestDto.toEntity());
+
+    public String Save(FixedSaveDto requestDto) {
+        try {
+            fixedRepository.save(requestDto.toEntity());
+            return "success";
+        } catch (Exception e) {
+            return ("저장에 실패 하였습니다 : " + e);
+        }
+
     }
-    public void Delete(FixedSaveDto requestDto) {
-        fixedRepository.delete(requestDto.toEntity());
+
+    public String Delete(FixedSaveDto requestDto) {
+        try {
+            fixedRepository.delete(requestDto.toEntity());
+            return "success";
+        } catch (Exception e) {
+            return ("삭제에 실패 하였습니다 : " + e);
+        }
+    }
+
+
+    public String SaveFixedToUser(FixToUserDto requestDto) {
+        // N : M 저장
+        try {
+            // N 을 찾는다
+            Optional<UserEntity> userOptional = userRepository.findByUserId(requestDto.getUserId());
+
+            if (userOptional.isPresent()) {
+                // M을 찾는다
+                Optional<FixedEntity> fixedOptional = fixedRepository.findByName(requestDto.getFixedName());
+
+                if (fixedOptional.isPresent()) {
+                    UserEntity user = userOptional.get();
+                    FixedEntity Fixed = fixedOptional.get();
+                    // N에 M을 넣어준다
+                    user.getFixedExtensions().add(Fixed); // 사용자에게 확장 추가
+                    // M에 N을 넣어준다
+                    Fixed.getUsers().add(user); // 확장에 사용자 추가
+
+                    // N을 저장한다
+                    userRepository.save(user); // 사용자 저장
+                    // M을 저장한다
+                    fixedRepository.save(Fixed); // 확장 저장
+                    return "success";
+
+                } else {
+                    // ID의 Fixed을 찾을 수 없는 경우 처리
+                    return "올바른 고정 확장자가 아닙니다";
+                }
+            } else {
+                // 사용자를 찾을 수 없는 경우 처리
+                return "유저를 찾을 수 없습니다";
+            }
+        } catch (Exception e) {
+            return ("저장에 실패 하였습니다 : " + e);
+        }
+
+    }
+
+    public String DeleteFixedToUser(FixToUserDto requestDto) {
+        // N : M 삭제
+        try {
+            // N 을 찾는다
+            Optional<UserEntity> userOptional = userRepository.findByUserId(requestDto.getUserId());
+
+            if (userOptional.isPresent()) {
+                // M 을 찾는다
+                Optional<FixedEntity> fixedOptional = fixedRepository.findByName(requestDto.getFixedName());
+
+                if (fixedOptional.isPresent()) {
+                    UserEntity user = userOptional.get();
+                    FixedEntity entity = fixedOptional.get();
+                    // N에 M을 삭제한다
+                    user.getFixedExtensions().remove(entity);
+                    // M에 N을 삭제한다
+                    entity.getUsers().remove(user);
+
+                    // N을 저장한다
+                    userRepository.save(user);
+                    // M을 저장한다
+                    fixedRepository.save(entity);
+                    return "success";
+                } else {
+                    // ID의 Fixed을 찾을 수 없는 경우 처리
+                    return "올바른 고정 확장자가 아닙니다";
+                }
+            } else {
+                // 사용자를 찾을 수 없는 경우 처리
+                return "유저를 찾을 수 없습니다";
+            }
+
+        } catch (Exception e) {
+            return ("삭제에 실패 하였습니다 : " + e);
+        }
+
+//        return "삭제에 실패 하였습니다";
     }
 
     public FixedVo GetFixedForUser(String userId) {
-        Optional<UserEntity> userOptional = userRepository.findByUserId(userId);
+        try {
+            // N:M 관계 Get
+            // User를 찾는다
+            Optional<UserEntity> userOptional = userRepository.findByUserId(userId);
 
-        if (userOptional.isPresent()) {
-            UserEntity user = userOptional.get();
+            if (userOptional.isPresent()) {
+                UserEntity user = userOptional.get();
 
-            List<String> userFixNameList = user.getFixedExtensions().stream()
-                    .map(FixedEntity::getName)
-                    .collect(Collectors.toList());
+                // User의 Fixed의 이름만 추출한다
+                List<String> userFixNameList = user.getFixedExtensions().stream()
+                        .map(FixedEntity::getName)
+                        .collect(Collectors.toList());
 
-            List<FixedEntity> Entity = fixedRepository.findAll();
-
-            HashMap<String,Boolean> checkList = new HashMap<>();
-            for (FixedEntity entity : Entity) {
-                checkList.put(entity.getName(), false);
-            }
-
-            for (String name : userFixNameList) {
-                // 기존 키가 있는지 확인하여 기존 값이 false인 경우에만 true로 업데이트
-                if (checkList.containsKey(name) && !checkList.get(name)) {
-                    checkList.put(name, true);
+                // Fixed를 모두 불러온다
+                List<FixedEntity> Entity = fixedRepository.findAll();
+                HashMap<String, Boolean> checkList = new HashMap<>();
+                // Fixed를 HashMpa에 넣어준다
+                for (FixedEntity entity : Entity) {
+                    checkList.put(entity.getName(), false);
                 }
-            }
-            List<String> keyList = new ArrayList<>(checkList.keySet());
-            List<Boolean> valueList = new ArrayList<>(checkList.values());
-            return FixedVo.builder().fixedName(keyList).fixedStatus(valueList).build();
-        } else {
-            // 사용자를 찾을 수 없는 경우 처리
-            return null; // 빈 Set을 반환하거나 에러 처리를 수행할 수 있습니다.
-        }
-    }
 
-    public void SaveFixedToUser(FixToUserDto requestDto) {
-        Optional<UserEntity> userOptional = userRepository.findByUserId(requestDto.getUserId());
-
-        if (userOptional.isPresent()) {
-            Optional<FixedEntity> fixedOptional = fixedRepository.findByName(requestDto.getFixedName());
-
-            if (fixedOptional.isPresent()) {
-                UserEntity user = userOptional.get();
-                FixedEntity Fixed = fixedOptional.get();
-
-                user.getFixedExtensions().add(Fixed); // 사용자에게 확장 추가
-                Fixed.getUsers().add(user); // 확장에 사용자 추가
-
-                userRepository.save(user); // 사용자 저장
-                fixedRepository.save(Fixed); // 확장 저장
-
+                for (String name : userFixNameList) {
+                    // user의 Fixed 목록에 있는 데이터가 checkList에 있을경우
+                    // 해당 Fixed를 true로 만들어 준다
+                    if (checkList.containsKey(name) && !checkList.get(name)) {
+                        checkList.put(name, true);
+                    }
+                }
+                List<String> keyList = new ArrayList<>(checkList.keySet());
+                List<Boolean> valueList = new ArrayList<>(checkList.values());
+                return FixedVo.builder().fixedName(keyList).fixedStatus(valueList).build();
             } else {
-                // 해당 ID의 확장을 찾을 수 없는 경우 처리
+                String error = "정보를 찾을 수 없습니다";
+                return FixedVo.builder().error(error).build();
             }
-        } else {
-            // 해당 ID의 사용자를 찾을 수 없는 경우 처리
+        } catch (Exception e) {
+            return FixedVo.builder().error(e.getMessage()).build();
         }
     }
-
-    public void DeleteFixedToUser(FixToUserDto requestDto) {
-        Optional<UserEntity> userOptional = userRepository.findByUserId(requestDto.getUserId());
-
-        if (userOptional.isPresent()) {
-            Optional<FixedEntity> fixedOptional = fixedRepository.findByName(requestDto.getFixedName());
-
-            if (fixedOptional.isPresent()) {
-                UserEntity user = userOptional.get();
-                FixedEntity entity = fixedOptional.get();
-
-                user.getFixedExtensions().remove(entity);
-                entity.getUsers().remove(user);
-
-                userRepository.save(user);
-                fixedRepository.save(entity);
-            } else {
-                // 해당 ID의 확장을 찾을 수 없는 경우 처리
-            }
-        } else {
-            // 해당 ID의 사용자를 찾을 수 없는 경우 처리
-        }
-    }
-
-
 }
+

@@ -14,8 +14,12 @@ public class FixedVo {
     List<String> fixedName;
     List<Boolean> fixedStatus;
 
-    public FixedVo(List<String> fixedName, List<Boolean> fixedStatus) {
+    String error = "success";
+
+
+    public FixedVo(List<String> fixedName, List<Boolean> fixedStatus, String error) {
         this.fixedName = fixedName;
         this.fixedStatus = fixedStatus;
+        this.error = error;
     }
 }

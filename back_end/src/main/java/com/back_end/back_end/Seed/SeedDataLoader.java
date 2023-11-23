@@ -25,6 +25,8 @@ public class SeedDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        // seed 유저
         Optional<UserEntity> optionalUser = userRepository.findByUserId("user");
         if (!optionalUser.isPresent()) {
             UserEntity seedUser = new UserEntity();
@@ -33,7 +35,7 @@ public class SeedDataLoader implements CommandLineRunner {
             userRepository.save(seedUser);
         }
 
-
+        // seed Fixed 값
         String[] names = new String[]{".bat", ".cmd", ".com", ".cpl", ".exe", ".scr", ".js",};
         for (String name : names) {
             Optional<FixedEntity> optionalFixed = fixedRepository.findByName(name);

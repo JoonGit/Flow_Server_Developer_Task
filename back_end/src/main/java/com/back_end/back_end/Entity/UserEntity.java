@@ -32,9 +32,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CustomEntity> customExtensions = new HashSet<>();
 
-
-
-
     @Builder
     public UserEntity(String userId, String password
     ) {

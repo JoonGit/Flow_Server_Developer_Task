@@ -23,7 +23,6 @@ public class CustomEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-
     @Builder
     public CustomEntity(String name, UserEntity user
     ) {
