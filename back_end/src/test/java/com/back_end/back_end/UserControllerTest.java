@@ -47,7 +47,7 @@ public class UserControllerTest {
     public void SignupTest() throws Exception {
         //given
 
-        String userId = "user";
+        String userId = "user2";
         String password = "qwer1234";
 
 
@@ -58,9 +58,9 @@ public class UserControllerTest {
 
         String url = "http://localhost:" + port + "/user/signup";
         //when
-        Object message =  mvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(new ObjectMapper().writeValueAsString(requestDto)))
+        mvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(new ObjectMapper().writeValueAsString(requestDto)))
                 .andExpect(status().isOk());
 
         //then

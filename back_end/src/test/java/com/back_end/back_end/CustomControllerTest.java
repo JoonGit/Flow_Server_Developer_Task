@@ -1,11 +1,8 @@
 package com.back_end.back_end;
 
-import com.back_end.back_end.Entity.CustomExtensionEntity;
-import com.back_end.back_end.Entity.FixedExtensionEntity;
-import com.back_end.back_end.Repository.CustomExtensionRepository;
-import com.back_end.back_end.Repository.FixedExtensionRepository;
-import com.back_end.back_end.dto.CustomExtensionSaveDto;
-import com.back_end.back_end.dto.FixExtensionSaveDto;
+import com.back_end.back_end.Entity.CustomEntity;
+import com.back_end.back_end.Repository.CustomRepository;
+import com.back_end.back_end.dto.CustomSaveDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +30,7 @@ public class CustomControllerTest {
     private int port;
 
     @Autowired
-    private CustomExtensionRepository extensionRepository;
+    private CustomRepository customRepository;
 
     @Autowired
     private WebApplicationContext context;
@@ -52,7 +49,7 @@ public class CustomControllerTest {
         String name = "custom1";
         String userId = "user";
 
-            CustomExtensionSaveDto requestDto = CustomExtensionSaveDto.builder()
+            CustomSaveDto requestDto = CustomSaveDto.builder()
                     .name(name)
                     .userId(userId)
                     .build();
@@ -64,7 +61,7 @@ public class CustomControllerTest {
                             .content(new ObjectMapper().writeValueAsString(requestDto)))
                     .andExpect(status().isOk());
             //then
-            Optional<CustomExtensionEntity> object = extensionRepository.findByName(name);
+            Optional<CustomEntity> object = customRepository.findByNameOrderByName(name);
             if(object.isPresent())
             {
                 System.out.println("저장 성공");
@@ -81,7 +78,7 @@ public class CustomControllerTest {
         String name = "custom1";
         String userId = "user";
 
-        CustomExtensionSaveDto requestDto = CustomExtensionSaveDto.builder()
+        CustomSaveDto requestDto = CustomSaveDto.builder()
                 .name(name)
                 .userId(userId)
                 .build();
@@ -93,7 +90,7 @@ public class CustomControllerTest {
                         .content(new ObjectMapper().writeValueAsString(requestDto)))
                 .andExpect(status().isOk());
         //then
-        Optional<CustomExtensionEntity> object = extensionRepository.findByName(name);
+        Optional<CustomEntity> object = customRepository.findByNameOrderByName(name);
         if(!object.isPresent())
         {
             System.out.println("삭제 성공");
@@ -104,26 +101,6 @@ public class CustomControllerTest {
         }
     }
 
-//    @Test
-//    public void GetTest() throws Exception {
-//        //given
-//
-//        String userId = "test";
-//        String password = "qwer1234";
-//
-//
-//        UserSaveDto requestDto = UserSaveDto.builder()
-//                .userId(userId)
-//                .password(password)
-//                .build();
-//
-//        String url = "http://localhost:" + port + "/user/login";
-//        //when
-//        Object message =  mvc.perform(post(url)
-//                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                        .content(new ObjectMapper().writeValueAsString(requestDto)))
-//                .andExpect(status().isOk());
-//    }
 
 
 }

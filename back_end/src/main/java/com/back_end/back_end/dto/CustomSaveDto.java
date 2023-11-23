@@ -1,7 +1,6 @@
 package com.back_end.back_end.dto;
 
-import com.back_end.back_end.Entity.CustomExtensionEntity;
-import com.back_end.back_end.Entity.FixedExtensionEntity;
+import com.back_end.back_end.Entity.CustomEntity;
 import com.back_end.back_end.Entity.UserEntity;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Builder;
@@ -11,22 +10,22 @@ import lombok.NoArgsConstructor;
 @JsonAutoDetect
 @Getter
 @NoArgsConstructor
-public class CustomExtensionSaveDto {
+public class CustomSaveDto {
     private String userId;
     private String name;
 
 
     @Builder
-    public CustomExtensionSaveDto(String userId,
-            String name
+    public CustomSaveDto(String userId,
+                         String name
             ) {
         this.userId = userId;
         this.name = name;
 
     }
 
-    public CustomExtensionEntity toEntity(UserEntity user) {
-        return CustomExtensionEntity.builder()
+    public CustomEntity toEntity(UserEntity user) {
+        return CustomEntity.builder()
                 .name(name)
                 .user(user)
                 .build();

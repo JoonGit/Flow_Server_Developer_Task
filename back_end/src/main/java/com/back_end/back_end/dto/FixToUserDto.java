@@ -12,22 +12,15 @@ import lombok.NoArgsConstructor;
 public class FixToUserDto {
 
     private String userId;
-    private String extensionName;
+    private String fixedName;
 
 
     @Builder
     public FixToUserDto(
             String userId,
-            String extensionName
+            String fixedName
     ) {
         this.userId = userId;
-        this.extensionName = extensionName;
+        this.fixedName = fixedName;
     }
-
-//    public UserEntity toEntity(String encodingPassword) {
-//        return UserEntity.builder()
-//                .userId(userId)
-//                .password(encodingPassword)
-//                .build();
-//    }
 }

@@ -4,12 +4,14 @@ import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class UserEntity {
@@ -25,10 +27,10 @@ public class UserEntity {
     @JoinTable(name = "user_fixedextension",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "fixedextension_id"))
-    private Set<FixedExtensionEntity> FixedExtensions = new HashSet<>();
+    private Set<FixedEntity> FixedExtensions = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CustomExtensionEntity> customExtensions = new HashSet<>();
+    private Set<CustomEntity> customExtensions = new HashSet<>();
 
 
 

@@ -12,16 +12,16 @@ import lombok.NoArgsConstructor;
 public class CustomToUserDto {
 
     private String userId;
-    private String extensionName;
+    private String customName;
 
 
     @Builder
     public CustomToUserDto(
             String userId,
-            String extensionName
+            String customName
     ) {
         this.userId = userId;
-        this.extensionName = extensionName;
+        this.customName = customName;
     }
 
 //    public UserEntity toEntity(String encodingPassword) {

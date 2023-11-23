@@ -1,12 +1,12 @@
 package com.back_end.back_end.Service;
 
 
-import com.back_end.back_end.Entity.FixedExtensionEntity;
+import com.back_end.back_end.Entity.FixedEntity;
 import com.back_end.back_end.Entity.UserEntity;
-import com.back_end.back_end.Repository.FixedExtensionRepository;
+import com.back_end.back_end.Repository.FixedRepository;
 import com.back_end.back_end.Repository.UserRepository;
-import com.back_end.back_end.Vo.FixedExtensionVo;
-import com.back_end.back_end.dto.FixExtensionSaveDto;
+import com.back_end.back_end.Vo.FixedVo;
+import com.back_end.back_end.dto.FixedSaveDto;
 import com.back_end.back_end.dto.FixToUserDto;
 import org.springframework.stereotype.Service;
 
@@ -17,40 +17,40 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class FixedExtensionService {
+public class FixedService {
     private final UserRepository userRepository;
 
-    private final FixedExtensionRepository fixedExtensionRepository;
+    private final FixedRepository fixedRepository;
 
-    public FixedExtensionService(UserRepository userRepository, FixedExtensionRepository fixedExtensionRepository) {
+    public FixedService(UserRepository userRepository, FixedRepository fixedRepository) {
         this.userRepository = userRepository;
-        this.fixedExtensionRepository = fixedExtensionRepository;
+        this.fixedRepository = fixedRepository;
     }
-    public void Save(FixExtensionSaveDto requestDto) {
-        fixedExtensionRepository.save(requestDto.toEntity());
+    public void Save(FixedSaveDto requestDto) {
+        fixedRepository.save(requestDto.toEntity());
     }
-    public void Delete(FixExtensionSaveDto requestDto) {
-        fixedExtensionRepository.delete(requestDto.toEntity());
+    public void Delete(FixedSaveDto requestDto) {
+        fixedRepository.delete(requestDto.toEntity());
     }
 
-    public FixedExtensionVo GetExtensionsForUser(String userId) {
+    public FixedVo GetFixedForUser(String userId) {
         Optional<UserEntity> userOptional = userRepository.findByUserId(userId);
 
         if (userOptional.isPresent()) {
             UserEntity user = userOptional.get();
 
-            List<String> userFixExtensionNameList = user.getFixedExtensions().stream()
-                    .map(FixedExtensionEntity::getName)
+            List<String> userFixNameList = user.getFixedExtensions().stream()
+                    .map(FixedEntity::getName)
                     .collect(Collectors.toList());
 
-            List<FixedExtensionEntity> extensionEntity = fixedExtensionRepository.findAll();
+            List<FixedEntity> Entity = fixedRepository.findAll();
 
             HashMap<String,Boolean> checkList = new HashMap<>();
-            for (FixedExtensionEntity entity : extensionEntity) {
+            for (FixedEntity entity : Entity) {
                 checkList.put(entity.getName(), false);
             }
 
-            for (String name : userFixExtensionNameList) {
+            for (String name : userFixNameList) {
                 // 기존 키가 있는지 확인하여 기존 값이 false인 경우에만 true로 업데이트
                 if (checkList.containsKey(name) && !checkList.get(name)) {
                     checkList.put(name, true);
@@ -58,7 +58,7 @@ public class FixedExtensionService {
             }
             List<String> keyList = new ArrayList<>(checkList.keySet());
             List<Boolean> valueList = new ArrayList<>(checkList.values());
-            return FixedExtensionVo.builder().fixedExtensionName(keyList).fixedExtensionStatus(valueList).build();
+            return FixedVo.builder().fixedName(keyList).fixedStatus(valueList).build();
         } else {
             // 사용자를 찾을 수 없는 경우 처리
             return null; // 빈 Set을 반환하거나 에러 처리를 수행할 수 있습니다.
@@ -69,17 +69,17 @@ public class FixedExtensionService {
         Optional<UserEntity> userOptional = userRepository.findByUserId(requestDto.getUserId());
 
         if (userOptional.isPresent()) {
-            Optional<FixedExtensionEntity> extensionOptional = fixedExtensionRepository.findByName(requestDto.getExtensionName());
+            Optional<FixedEntity> fixedOptional = fixedRepository.findByName(requestDto.getFixedName());
 
-            if (extensionOptional.isPresent()) {
+            if (fixedOptional.isPresent()) {
                 UserEntity user = userOptional.get();
-                FixedExtensionEntity extension = extensionOptional.get();
+                FixedEntity Fixed = fixedOptional.get();
 
-                user.getFixedExtensions().add(extension); // 사용자에게 확장 추가
-                extension.getUsers().add(user); // 확장에 사용자 추가
+                user.getFixedExtensions().add(Fixed); // 사용자에게 확장 추가
+                Fixed.getUsers().add(user); // 확장에 사용자 추가
 
                 userRepository.save(user); // 사용자 저장
-                fixedExtensionRepository.save(extension); // 확장 저장
+                fixedRepository.save(Fixed); // 확장 저장
 
             } else {
                 // 해당 ID의 확장을 찾을 수 없는 경우 처리
@@ -93,18 +93,17 @@ public class FixedExtensionService {
         Optional<UserEntity> userOptional = userRepository.findByUserId(requestDto.getUserId());
 
         if (userOptional.isPresent()) {
-            Optional<FixedExtensionEntity> extensionOptional = fixedExtensionRepository.findByName(requestDto.getExtensionName());
+            Optional<FixedEntity> fixedOptional = fixedRepository.findByName(requestDto.getFixedName());
 
-            if (extensionOptional.isPresent()) {
+            if (fixedOptional.isPresent()) {
                 UserEntity user = userOptional.get();
-                FixedExtensionEntity extension = extensionOptional.get();
+                FixedEntity entity = fixedOptional.get();
 
-                user.getFixedExtensions().remove(extension);
-                extension.getUsers().remove(user);
+                user.getFixedExtensions().remove(entity);
+                entity.getUsers().remove(user);
 
                 userRepository.save(user);
-                fixedExtensionRepository.save(extension);
-
+                fixedRepository.save(entity);
             } else {
                 // 해당 ID의 확장을 찾을 수 없는 경우 처리
             }

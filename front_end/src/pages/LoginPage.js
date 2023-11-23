@@ -2,15 +2,12 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
-import { changeId } from "../redux/store";
-import { useDispatch } from "react-redux";
-import { PostAndMoveAndReduxSave } from "../axios/post";
+import { Login } from "../axios/userAxios";
 
-function SigninPage() {
+function LoginPage() {
   const [userId, setId] = useState("");
   const [password, setPw] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleIdChange = (e) => {
     setId(e.target.value);
@@ -27,24 +24,15 @@ function SigninPage() {
       userId,
       password,
     };
-
+    // 로그인 요청
     sendSigninData(userData);
   };
 
   // 백엔드로 로그인 데이터 보내기
   const sendSigninData = (userData) => {
     const url = process.env.REACT_APP_BACKEND_URL + "user/login";
-
     let moveUrl = "/main";
-    PostAndMoveAndReduxSave(
-      url,
-      moveUrl,
-      userData,
-      navigate,
-      dispatch,
-      changeId,
-      userId
-    );
+    Login(url, moveUrl, userData, navigate);
   };
 
   const handleSignup = () => {
@@ -107,4 +95,4 @@ function SigninPage() {
   );
 }
 
-export default SigninPage;
+export default LoginPage;

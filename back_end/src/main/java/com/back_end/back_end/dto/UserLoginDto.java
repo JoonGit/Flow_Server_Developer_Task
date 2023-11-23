@@ -25,6 +25,7 @@ public class UserLoginDto {
 
     }
 
+//    삭제 고려
     public UserEntity toEntity() {
         return UserEntity.builder()
                 .userId(userId)

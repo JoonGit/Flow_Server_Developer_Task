@@ -1,8 +1,8 @@
 package com.back_end.back_end;
 
-import com.back_end.back_end.Entity.FixedExtensionEntity;
-import com.back_end.back_end.Repository.FixedExtensionRepository;
-import com.back_end.back_end.dto.FixExtensionSaveDto;
+import com.back_end.back_end.Entity.FixedEntity;
+import com.back_end.back_end.Repository.FixedRepository;
+import com.back_end.back_end.dto.FixedSaveDto;
 import com.back_end.back_end.dto.FixToUserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ public class FixedControllerTest {
     private int port;
 
     @Autowired
-    private FixedExtensionRepository extensionRepository;
+    private FixedRepository fixedRepository;
 
     @Autowired
     private WebApplicationContext context;
@@ -51,7 +51,7 @@ public class FixedControllerTest {
         String[] names = new String[]{ ".bat", ".cmd", ".com", ".cpl", ".exe", ".scr", ".js",};
 
         for (String name : names) {
-            FixExtensionSaveDto requestDto = FixExtensionSaveDto.builder()
+            FixedSaveDto requestDto = FixedSaveDto.builder()
                     .name(name)
                     .build();
 
@@ -63,7 +63,7 @@ public class FixedControllerTest {
                     .andExpect(status().isOk());
 
             //then
-            Optional<FixedExtensionEntity> object = extensionRepository.findByName(name);
+            Optional<FixedEntity> object = fixedRepository.findByName(name);
             if(object.isPresent())
             {
                 System.out.println("저장 성공");
@@ -76,16 +76,16 @@ public class FixedControllerTest {
 
     }
     @Test
-    public void SaveUserToExtensionTest() throws Exception {
+    public void SaveUserToFixedTest() throws Exception {
         //given
 
         String userId = "user";
-        String extensionName = ".bat";
+        String fixedName = ".bat";
 
 
         FixToUserDto requestDto = FixToUserDto.builder()
                 .userId(userId)
-                .extensionName(extensionName)
+                .fixedName(fixedName)
                 .build();
 
         String url = "http://localhost:" + port + "/fixed/savefixtouser";

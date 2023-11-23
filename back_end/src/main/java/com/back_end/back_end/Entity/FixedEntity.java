@@ -4,15 +4,17 @@ import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
-public class CustomExtensionEntity {
+public class FixedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,15 +23,12 @@ public class CustomExtensionEntity {
     @Column(columnDefinition = "varchar (20)")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
-
+    @ManyToMany(mappedBy = "FixedExtensions")
+    private Set<UserEntity> users = new HashSet<>();
 
     @Builder
-    public CustomExtensionEntity(String name, UserEntity user
+    public FixedEntity(String name
     ) {
         this.name = name;
-        this.user = user;
     }
 }

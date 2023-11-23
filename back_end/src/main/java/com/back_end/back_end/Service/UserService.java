@@ -1,7 +1,7 @@
 package com.back_end.back_end.Service;
 
 import com.back_end.back_end.Entity.UserEntity;
-import com.back_end.back_end.Repository.FixedExtensionRepository;
+import com.back_end.back_end.Repository.FixedRepository;
 import com.back_end.back_end.Repository.UserRepository;
 import com.back_end.back_end.dto.UserSaveDto;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,11 @@ import java.util.*;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final FixedExtensionRepository extensionRepository;
     private final BCryptPasswordEncoder encoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, FixedExtensionRepository extensionRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.encoder = encoder;
-        this.extensionRepository = extensionRepository;
     }
 
     public String Signup(UserSaveDto requestDto) {

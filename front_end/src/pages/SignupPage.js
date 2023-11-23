@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PostAndMove } from "../axios/post";
+import { Signup } from "../axios/userAxios";
 
 // react-bootstrap components
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
@@ -36,7 +36,7 @@ function SignupPage() {
     }
     const url = process.env.REACT_APP_BACKEND_URL + "user/signup";
     const moveUrl = "/";
-    PostAndMove(url, moveUrl, userData, navigate);
+    Signup(url, moveUrl, userData, navigate);
   };
 
   return (

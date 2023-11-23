@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function PostAndMove(url, moveUrl, data, navigate) {
+function Signup(url, LoginUrl, data, navigate) {
   return (
     // JSON 데이터와 함께 POST 요청 보내기
     axios
@@ -10,28 +10,22 @@ function PostAndMove(url, moveUrl, data, navigate) {
         },
       })
       .then((response) => {
-        console.log(response.data);
         if (response.data === "success") {
-          navigate(moveUrl);
+          // 회원가입 성공시 로그인 페이지 이동
+          navigate(LoginUrl);
         } else {
-          alert("실패하였습니다." + response.data);
+          console.log("Signup error : " + response.data);
+          alert("실패하였습니다. " + response.data);
         }
       })
       .catch((error) => {
+        console.log("Signup error : " + error);
         alert("실패 : ", error);
       })
   );
 }
 
-function PostAndMoveAndReduxSave(
-  url,
-  moveUrl,
-  data,
-  navigate,
-  dispatch,
-  saveFun,
-  saveData
-) {
+function Login(url, mainUrl, data, navigate) {
   // JSON 데이터와 함께 POST 요청 보내기
   axios
     .post(url, data, {
@@ -41,17 +35,21 @@ function PostAndMoveAndReduxSave(
       withCredentials: false,
     })
     .then((response) => {
-      console.log(response.data);
       if (response.data === "success") {
-        dispatch(saveFun(saveData));
-        navigate(moveUrl);
+        // 회원가입 성공시
+        // LocalStorage 유저 정보 저장
+        localStorage.setItem("userId", data.userId);
+        // mainUrl로 이동
+        navigate(mainUrl);
       } else {
+        console.log("Login error : " + response.data);
         alert("실패하였습니다. " + response.data);
       }
     })
     .catch((error) => {
+      console.log("Login error : " + error);
       alert("실패 : ", error);
     });
 }
 
-export { PostAndMove, PostAndMoveAndReduxSave };
+export { Signup, Login };

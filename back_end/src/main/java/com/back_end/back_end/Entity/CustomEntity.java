@@ -6,13 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class FixedExtensionEntity {
+public class CustomEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,12 +19,15 @@ public class FixedExtensionEntity {
     @Column(columnDefinition = "varchar (20)")
     private String name;
 
-    @ManyToMany(mappedBy = "FixedExtensions")
-    private Set<UserEntity> users = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
 
     @Builder
-    public FixedExtensionEntity(String name
+    public CustomEntity(String name, UserEntity user
     ) {
         this.name = name;
+        this.user = user;
     }
 }
