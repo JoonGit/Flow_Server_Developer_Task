@@ -1,9 +1,9 @@
 package com.back_end.back_end.Seed;
 
-import com.back_end.back_end.Entity.FixedEntity;
-import com.back_end.back_end.Entity.UserEntity;
-import com.back_end.back_end.Repository.FixedRepository;
-import com.back_end.back_end.Repository.UserRepository;
+import com.back_end.back_end.Entity.Fixed.FixedEntity;
+import com.back_end.back_end.Entity.User.UserEntity;
+import com.back_end.back_end.Repository.Fixed.FixedRepository;
+import com.back_end.back_end.Repository.User.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

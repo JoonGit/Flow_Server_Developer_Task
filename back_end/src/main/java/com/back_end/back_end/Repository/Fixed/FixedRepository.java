@@ -1,6 +1,6 @@
-package com.back_end.back_end.Repository;
+package com.back_end.back_end.Repository.Fixed;
 
-import com.back_end.back_end.Entity.FixedEntity;
+import com.back_end.back_end.Entity.Fixed.FixedEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

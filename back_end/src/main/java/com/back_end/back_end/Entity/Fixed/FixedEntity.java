@@ -1,5 +1,6 @@
-package com.back_end.back_end.Entity;
+package com.back_end.back_end.Entity.Fixed;
 
+import com.back_end.back_end.Entity.User.UserEntity;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;

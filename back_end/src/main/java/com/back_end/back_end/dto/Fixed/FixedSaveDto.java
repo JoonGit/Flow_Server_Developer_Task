@@ -1,6 +1,6 @@
-package com.back_end.back_end.dto;
+package com.back_end.back_end.dto.Fixed;
 
-import com.back_end.back_end.Entity.FixedEntity;
+import com.back_end.back_end.Entity.Fixed.FixedEntity;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Builder;
 import lombok.Getter;

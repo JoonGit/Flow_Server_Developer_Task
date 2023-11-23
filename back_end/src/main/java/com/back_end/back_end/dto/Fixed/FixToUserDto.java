@@ -1,4 +1,5 @@
-package com.back_end.back_end.dto;
+package com.back_end.back_end.dto.Fixed;
+
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Builder;
@@ -8,16 +9,15 @@ import lombok.NoArgsConstructor;
 @JsonAutoDetect
 @Getter
 @NoArgsConstructor
-public class CustomDeleteDto {
+public class FixToUserDto {
+
     private String userId;
-    private String name;
+    private String fixedName;
+
 
     @Builder
-    public CustomDeleteDto(String userId,
-                           String name
-    ) {
+    public FixToUserDto(String userId, String fixedName) {
         this.userId = userId;
-        this.name = name;
-
+        this.fixedName = fixedName;
     }
 }

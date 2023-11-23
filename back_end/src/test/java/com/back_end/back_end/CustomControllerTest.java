@@ -1,8 +1,8 @@
 package com.back_end.back_end;
 
-import com.back_end.back_end.Entity.CustomEntity;
-import com.back_end.back_end.Repository.CustomRepository;
-import com.back_end.back_end.dto.CustomSaveDto;
+import com.back_end.back_end.Entity.Custom.CustomEntity;
+import com.back_end.back_end.Repository.Custom.CustomRepository;
+import com.back_end.back_end.dto.Custom.CustomSaveDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,8 @@
-package com.back_end.back_end.Service;
+package com.back_end.back_end.Service.User;
 
-import com.back_end.back_end.Entity.UserEntity;
-import com.back_end.back_end.Repository.FixedRepository;
-import com.back_end.back_end.Repository.UserRepository;
-import com.back_end.back_end.dto.UserSaveDto;
+import com.back_end.back_end.Entity.User.UserEntity;
+import com.back_end.back_end.Repository.User.UserRepository;
+import com.back_end.back_end.dto.User.UserSaveDto;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

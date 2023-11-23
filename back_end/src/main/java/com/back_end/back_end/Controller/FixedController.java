@@ -1,9 +1,9 @@
 package com.back_end.back_end.Controller;
 
-import com.back_end.back_end.Service.FixedService;
-import com.back_end.back_end.Vo.FixedVo;
-import com.back_end.back_end.dto.FixedSaveDto;
-import com.back_end.back_end.dto.FixToUserDto;
+import com.back_end.back_end.Service.Fixed.FixedService;
+import com.back_end.back_end.Vo.Fixed.FixedVo;
+import com.back_end.back_end.dto.Fixed.FixedSaveDto;
+import com.back_end.back_end.dto.Fixed.FixToUserDto;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(originPatterns = "*")

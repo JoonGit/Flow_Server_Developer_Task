@@ -1,14 +1,13 @@
-package com.back_end.back_end.Service;
+package com.back_end.back_end.Service.Fixed;
 
 
-import com.back_end.back_end.Entity.FixedEntity;
-import com.back_end.back_end.Entity.UserEntity;
-import com.back_end.back_end.Repository.FixedRepository;
-import com.back_end.back_end.Repository.UserRepository;
-import com.back_end.back_end.Vo.CustomVo;
-import com.back_end.back_end.Vo.FixedVo;
-import com.back_end.back_end.dto.FixedSaveDto;
-import com.back_end.back_end.dto.FixToUserDto;
+import com.back_end.back_end.Entity.Fixed.FixedEntity;
+import com.back_end.back_end.Entity.User.UserEntity;
+import com.back_end.back_end.Repository.Fixed.FixedRepository;
+import com.back_end.back_end.Repository.User.UserRepository;
+import com.back_end.back_end.Vo.Fixed.FixedVo;
+import com.back_end.back_end.dto.Fixed.FixedSaveDto;
+import com.back_end.back_end.dto.Fixed.FixToUserDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

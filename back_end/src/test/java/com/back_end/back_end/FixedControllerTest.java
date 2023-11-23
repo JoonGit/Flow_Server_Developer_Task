@@ -1,9 +1,9 @@
 package com.back_end.back_end;
 
-import com.back_end.back_end.Entity.FixedEntity;
-import com.back_end.back_end.Repository.FixedRepository;
-import com.back_end.back_end.dto.FixedSaveDto;
-import com.back_end.back_end.dto.FixToUserDto;
+import com.back_end.back_end.Entity.Fixed.FixedEntity;
+import com.back_end.back_end.Repository.Fixed.FixedRepository;
+import com.back_end.back_end.dto.Fixed.FixedSaveDto;
+import com.back_end.back_end.dto.Fixed.FixToUserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

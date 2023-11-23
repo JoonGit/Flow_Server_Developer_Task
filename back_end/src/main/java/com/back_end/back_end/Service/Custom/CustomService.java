@@ -1,13 +1,13 @@
-package com.back_end.back_end.Service;
+package com.back_end.back_end.Service.Custom;
 
 
-import com.back_end.back_end.Entity.CustomEntity;
-import com.back_end.back_end.Entity.UserEntity;
-import com.back_end.back_end.Repository.CustomRepository;
-import com.back_end.back_end.Repository.UserRepository;
-import com.back_end.back_end.Vo.CustomVo;
-import com.back_end.back_end.dto.CustomDeleteDto;
-import com.back_end.back_end.dto.CustomSaveDto;
+import com.back_end.back_end.Entity.Custom.CustomEntity;
+import com.back_end.back_end.Entity.User.UserEntity;
+import com.back_end.back_end.Repository.Custom.CustomRepository;
+import com.back_end.back_end.Repository.User.UserRepository;
+import com.back_end.back_end.Vo.Custom.CustomVo;
+import com.back_end.back_end.dto.Custom.CustomDeleteDto;
+import com.back_end.back_end.dto.Custom.CustomSaveDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,9 +1,8 @@
 package com.back_end.back_end;
 
-import com.back_end.back_end.Entity.UserEntity;
-import com.back_end.back_end.Repository.UserRepository;
-import com.back_end.back_end.dto.UserSaveDto;
-import com.back_end.back_end.dto.FixToUserDto;
+import com.back_end.back_end.Entity.User.UserEntity;
+import com.back_end.back_end.Repository.User.UserRepository;
+import com.back_end.back_end.dto.User.UserSaveDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

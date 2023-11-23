@@ -1,6 +1,6 @@
-package com.back_end.back_end.Repository;
+package com.back_end.back_end.Repository.Custom;
 
-import com.back_end.back_end.Entity.CustomEntity;
+import com.back_end.back_end.Entity.Custom.CustomEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package com.back_end.back_end.Controller;
 
-import com.back_end.back_end.Service.UserService;
-import com.back_end.back_end.dto.UserSaveDto;
+import com.back_end.back_end.Service.User.UserService;
+import com.back_end.back_end.dto.User.UserSaveDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

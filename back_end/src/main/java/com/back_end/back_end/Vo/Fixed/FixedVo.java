@@ -1,4 +1,4 @@
-package com.back_end.back_end.Vo;
+package com.back_end.back_end.Vo.Fixed;
 
 
 import lombok.Builder;
