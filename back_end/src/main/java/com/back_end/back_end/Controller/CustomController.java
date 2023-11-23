@@ -17,13 +17,13 @@ public class CustomController {
     }
 
     @PostMapping("/save")
-    public void Save(@RequestBody CustomSaveDto extensionDto) {
-        customService.Save(extensionDto);
+    public String Save(@RequestBody CustomSaveDto extensionDto) {
+        return (customService.Save(extensionDto));
     }
 
     @PostMapping("/delete")
-    public void Delete(@RequestBody CustomDeleteDto extensionDto) {
-        customService.Delete(extensionDto);
+    public String Delete(@RequestBody CustomDeleteDto extensionDto) {
+        return (customService.Delete(extensionDto));
     }
 
     @GetMapping("/getcustom")

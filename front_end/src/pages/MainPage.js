@@ -94,13 +94,20 @@ function MainPage() {
       };
       try {
         // DB 저장 요청
-        PostData(url, data).then(() => {
-          const url =
-            process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
-          GetData(url, setCustomList);
+        PostData(url, data).then((response) => {
+          if (response.data === "success") {
+            const url =
+              process.env.REACT_APP_BACKEND_URL +
+              "custom/getcustom?userId=" +
+              id;
+            GetData(url, setCustomList);
+            // 입력 필드 초기화
+            setCustomInputText("");
+          } else {
+            console.log("PostData error : " + response.data);
+            alert("실패 : ", response.data);
+          }
         });
-        // 입력 필드 초기화
-        setCustomInputText("");
       } catch (error) {
         alert(error);
       }
@@ -119,10 +126,15 @@ function MainPage() {
     };
     // 삭제 요청
     try {
-      PostData(url, data).then(() => {
-        const url =
-          process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
-        GetData(url, setCustomList);
+      PostData(url, data).then((response) => {
+        if (response.data === "success") {
+          const url =
+            process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
+          GetData(url, setCustomList);
+        } else {
+          console.log("PostData error : " + response.data);
+          alert("실패 : ", response.data);
+        }
       });
     } catch (error) {
       alert(error);
@@ -141,11 +153,15 @@ function MainPage() {
       const url = process.env.REACT_APP_BACKEND_URL + "fixed/savefixtouser";
       // DB에 저장 요청
       PostData(url, data)
-        .then(() => {
-          // 저장된 정보 불러오기
-          const url =
-            process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
-          GetData(url, setFixedList);
+        .then((response) => {
+          if (response.data === "success") {
+            const url =
+              process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
+            GetData(url, setFixedList);
+          } else {
+            console.log("PostData error : " + response.data);
+            alert("실패 : ", response.data);
+          }
         })
         .catch((error) => {
           console.error("오류 발생:", error);
@@ -154,11 +170,16 @@ function MainPage() {
       const url = process.env.REACT_APP_BACKEND_URL + "fixed/deletefixtouser";
       // DB에 삭제 요청
       PostData(url, data)
-        .then(() => {
-          // 저장된 정보 불러오기
-          const url =
-            process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
-          GetData(url, setFixedList);
+        .then((response) => {
+          if (response.data === "success") {
+            // 저장된 정보 불러오기
+            const url =
+              process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
+            GetData(url, setFixedList);
+          } else {
+            console.log("PostData error : " + response.data);
+            alert("실패 : ", response.data);
+          }
         })
         .catch((error) => {
           console.error("오류 발생:", error);

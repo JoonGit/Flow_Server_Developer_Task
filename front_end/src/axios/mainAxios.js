@@ -3,8 +3,12 @@ import axios from "axios";
 const GetData = function (url, setFunc) {
   try {
     axios.get(url).then((response) => {
-      console.log(response.data);
-      setFunc(response.data);
+      if (response.data.error === null) {
+        setFunc(response.data);
+      } else {
+        console.log("GetData error : " + response.data.error);
+        alert("실패 : ", response.data.error);
+      }
     });
   } catch (error) {
     console.log("GetData error : " + error);
@@ -14,7 +18,7 @@ const GetData = function (url, setFunc) {
 
 function PostData(url, data) {
   try {
-    axios.post(url, data, {
+    return axios.post(url, data, {
       headers: {
         "Content-Type": "application/json",
       },

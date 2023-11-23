@@ -14,7 +14,7 @@ public class FixedVo {
     List<String> fixedName;
     List<Boolean> fixedStatus;
 
-    String error = "success";
+    String error ;
 
 
     public FixedVo(List<String> fixedName, List<Boolean> fixedStatus, String error) {

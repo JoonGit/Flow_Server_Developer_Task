@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class CustomVo {
     List<String> customName;
-    String error = "success";
+    String error;
 
     public CustomVo(List<String> customName, String error) {
         this.customName = customName;

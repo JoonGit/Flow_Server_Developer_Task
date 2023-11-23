@@ -17,23 +17,25 @@ public class FixedController {
     }
 
     @PostMapping("/save")
-    public void Save(@RequestBody FixedSaveDto extensionDto) {
-        fixedService.Save(extensionDto);
+    public String Save(@RequestBody FixedSaveDto extensionDto) {
+        return(fixedService.Save(extensionDto));
     }
 
     @PostMapping("/delete")
-    public void Delete(@RequestBody FixedSaveDto extensionDto) {
-        fixedService.Delete(extensionDto);
+    public String Delete(@RequestBody FixedSaveDto extensionDto) {
+
+        return(fixedService.Delete(extensionDto));
     }
 
     @PostMapping("/savefixtouser")
-    public void FixedSave(@RequestBody FixToUserDto requestDto) {
-        fixedService.SaveFixedToUser(requestDto);
+    public String FixedSave(@RequestBody FixToUserDto requestDto) {
+
+        return(fixedService.SaveFixedToUser(requestDto));
     }
 
     @PostMapping("/deletefixtouser")
-    public void FixedDelete(@RequestBody FixToUserDto requestDto) {
-        fixedService.DeleteFixedToUser(requestDto);
+    public String FixedDelete(@RequestBody FixToUserDto requestDto) {
+        return(fixedService.DeleteFixedToUser(requestDto));
     }
 
     @GetMapping("/getfixed")
