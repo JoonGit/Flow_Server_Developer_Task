@@ -28,7 +28,6 @@ function MainPage() {
 
   useEffect(() => {
     // 고정 확장자 정보 불러오기
-    console.log("userId : " + id);
     let url = process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
     GetData(url, setFixedList);
 
@@ -48,7 +47,7 @@ function MainPage() {
   const handleInputChange = (e) => {
     // 금지단어 입력불가
     if (forbiddenWord.some((word) => e.target.value.includes(word))) {
-      alert(`금지 단어를 입력하셨습니다(금지목록 : ${forbiddenWord}`); // *테스트 하기
+      alert(`금지 단어를 입력하셨습니다(금지목록 : ${forbiddenWord})`); // *테스트 하기
     } else {
       // 최대 길이 이상 입력 금지
       if (customInputText.length === maxInputTextLength) {

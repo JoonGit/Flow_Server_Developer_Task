@@ -13,7 +13,6 @@ const GetData = function (url, setFunc) {
 };
 
 function PostData(url, data) {
-  console.log(url);
   try {
     axios.post(url, data, {
       headers: {
