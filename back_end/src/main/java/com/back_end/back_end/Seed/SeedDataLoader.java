@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class SeedDataLoader implements CommandLineRunner {
 
@@ -23,20 +25,23 @@ public class SeedDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        UserEntity seedUser = new UserEntity();
-        seedUser.setUserId("user");
-        seedUser.setPassword(encoder.encode("qwer1234"));
-        userRepository.save(seedUser);
-
-
-
-
-        String[] names = new String[]{ ".bat", ".cmd", ".com", ".cpl", ".exe", ".scr", ".js",};
-        for (String name : names) {
-            FixedEntity fixedEntity = new FixedEntity();
-            fixedEntity.setName(name);
-            fixedRepository.save(fixedEntity);
+        Optional<UserEntity> optionalUser = userRepository.findByUserId("user");
+        if (!optionalUser.isPresent()) {
+            UserEntity seedUser = new UserEntity();
+            seedUser.setUserId("user");
+            seedUser.setPassword(encoder.encode("qwer1234"));
+            userRepository.save(seedUser);
         }
 
+
+        String[] names = new String[]{".bat", ".cmd", ".com", ".cpl", ".exe", ".scr", ".js",};
+        for (String name : names) {
+            Optional<FixedEntity> optionalFixed = fixedRepository.findByName(name);
+            if (!optionalFixed.isPresent()) {
+                FixedEntity fixedEntity = new FixedEntity();
+                fixedEntity.setName(name);
+                fixedRepository.save(fixedEntity);
+            }
+        }
     }
 }

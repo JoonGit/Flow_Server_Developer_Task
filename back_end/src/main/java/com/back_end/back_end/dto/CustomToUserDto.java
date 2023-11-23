@@ -24,10 +24,4 @@ public class CustomToUserDto {
         this.customName = customName;
     }
 
-//    public UserEntity toEntity(String encodingPassword) {
-//        return UserEntity.builder()
-//                .userId(userId)
-//                .password(encodingPassword)
-//                .build();
-//    }
 }

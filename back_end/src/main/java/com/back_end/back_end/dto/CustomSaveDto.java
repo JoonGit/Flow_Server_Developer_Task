@@ -14,22 +14,12 @@ public class CustomSaveDto {
     private String userId;
     private String name;
 
-
     @Builder
     public CustomSaveDto(String userId,
                          String name
-            ) {
+    ) {
         this.userId = userId;
         this.name = name;
 
     }
-
-    public CustomEntity toEntity(UserEntity user) {
-        return CustomEntity.builder()
-                .name(name)
-                .user(user)
-                .build();
-    }
-
-
 }

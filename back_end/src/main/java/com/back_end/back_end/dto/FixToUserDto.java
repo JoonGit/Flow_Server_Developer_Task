@@ -16,10 +16,7 @@ public class FixToUserDto {
 
 
     @Builder
-    public FixToUserDto(
-            String userId,
-            String fixedName
-    ) {
+    public FixToUserDto(String userId, String fixedName) {
         this.userId = userId;
         this.fixedName = fixedName;
     }

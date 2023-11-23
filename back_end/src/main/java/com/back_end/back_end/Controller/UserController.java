@@ -17,16 +17,13 @@ public class UserController {
 
     @PostMapping("/signup")
     public String Signup(@RequestBody UserSaveDto requestDto) {
-        return(userService.Signup(requestDto));
+        return (userService.Signup(requestDto));
     }
 
     @PostMapping("/login")
     public String Login(@RequestBody UserSaveDto requestDto) {
-        return(userService.Login(requestDto));
+        return (userService.Login(requestDto));
     }
-
-
-
 
 
 }

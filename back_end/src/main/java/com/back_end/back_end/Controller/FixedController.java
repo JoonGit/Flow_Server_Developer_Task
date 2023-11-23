@@ -1,4 +1,5 @@
 package com.back_end.back_end.Controller;
+
 import com.back_end.back_end.Service.FixedService;
 import com.back_end.back_end.Vo.FixedVo;
 import com.back_end.back_end.dto.FixedSaveDto;
@@ -37,7 +38,7 @@ public class FixedController {
 
     @GetMapping("/getfixed")
     public FixedVo Get(String userId) {
-        return(fixedService.GetFixedForUser(userId));
+        return (fixedService.GetFixedForUser(userId));
     }
 
 }

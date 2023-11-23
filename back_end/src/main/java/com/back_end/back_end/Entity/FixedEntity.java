@@ -20,7 +20,7 @@ public class FixedEntity {
     private Long id;
 
     @NotNull
-    @Column(columnDefinition = "varchar (20)")
+    @Column(columnDefinition = "varchar (20)" , unique=true)
     private String name;
 
     @ManyToMany(mappedBy = "FixedExtensions")

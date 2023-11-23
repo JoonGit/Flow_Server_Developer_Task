@@ -14,6 +14,7 @@ public class CustomController {
     public CustomController(CustomService customService) {
         this.customService = customService;
     }
+
     @PostMapping("/save")
     public void Save(@RequestBody CustomSaveDto extensionDto) {
         customService.Save(extensionDto);
@@ -26,7 +27,7 @@ public class CustomController {
 
     @GetMapping("/getcustom")
     public CustomVo Get(String userId) {
-        return(customService.GetCustomForUser(userId));
+        return (customService.GetCustomForUser(userId));
     }
 
 

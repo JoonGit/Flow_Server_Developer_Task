@@ -15,9 +15,8 @@ public class FixedSaveDto {
     @Builder
     public FixedSaveDto(
             String name
-            ) {
+    ) {
         this.name = name;
-
     }
 
     public FixedEntity toEntity() {
@@ -25,6 +24,4 @@ public class FixedSaveDto {
                 .name(name)
                 .build();
     }
-
-
 }
