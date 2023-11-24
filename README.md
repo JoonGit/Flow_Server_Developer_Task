@@ -128,11 +128,11 @@
     고정 확장자 목록 확인 후 커스텀 확장자 목록을 확인 후
     이름이 없으면 저장 하도록 설정
 ### _작업일지_
-1일차
-https://joon-coding.tistory.com/165
-2일차
-https://joon-coding.tistory.com/166
-3일차
-https://joon-coding.tistory.com/167
-4일차
-https://joon-coding.tistory.com/168
+1일차<br/>
+https://joon-coding.tistory.com/165<br/>
+2일차<br/>
+https://joon-coding.tistory.com/166<br/>
+3일차<br/>
+https://joon-coding.tistory.com/167<br/>
+4일차<br/>
+https://joon-coding.tistory.com/168<br/>
