@@ -1,4 +1,4 @@
-<h1 align="center">데이터 수집과 예측 프로젝트 백엔드 💻 </h1>
+<h1 align="center">Flow 서버 재발자 과제 💻 </h1>
 
 ## 🛠️ 기술 스택
 
@@ -43,7 +43,7 @@
 ## 📄 ERD
 
 <center>
-    <img src="./img/ERD.png" />
+    <img src="./img/ERD.PNG" />
 </center>
 
 ## 🔍 Overview
