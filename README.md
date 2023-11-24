@@ -72,7 +72,7 @@
 3. X 표시를 누르면 데이터가 삭제가 됩니다
 <center>
     <img src="./img/CustomList.PNG" />
-    <img src="https://github.com/JoonGit/Flow_Task_Test/assets/102887528/25dc6370-1e83-4e86-bb83-7e01d23af292">
+    <img src="https://github.com/JoonGit/Flow_Task_Test/assets/102887528/7741f789-de6d-4135-9fff-5c2a5382c4d1">
 
 </center>
 
