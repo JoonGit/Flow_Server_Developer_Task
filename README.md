@@ -63,7 +63,7 @@
 <center>
     <img src="./img/FixedList.PNG" />
     <img src="./img/FixedUser.PNG" />
-    <img src="https://github.com/JoonGit/Flow_Task_Test/assets/102887528/8d08b212-8e51-42fd-9d3b-fce0c3fb42dd">
+    <img src="https://github.com/JoonGit/Flow_Task_Test/assets/102887528/d9899b87-880d-473a-9cd5-34d58d7cfa20">
 </center>
 
 ### 2. 커스텀 확장자 데이터 저장
@@ -74,7 +74,7 @@
 3. X 표시를 누르면 데이터가 삭제가 됩니다
 <center>
     <img src="./img/CustomList.PNG" />
-    <img src="https://github.com/JoonGit/Flow_Task_Test/assets/102887528/7741f789-de6d-4135-9fff-5c2a5382c4d1">
+    <img src="https://github.com/JoonGit/Flow_Task_Test/assets/102887528/1d5e188e-4b1b-47e8-a849-01b68839c15a">
 
 </center>
 
