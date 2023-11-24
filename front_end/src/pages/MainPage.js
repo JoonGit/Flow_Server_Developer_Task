@@ -2,41 +2,70 @@ import React, { useState, useEffect } from "react";
 import { GetData, PostData } from "../axios/mainAxios";
 
 function MainPage() {
-  // 고정 확장자 목록
-  let [fixedList, setFixedList] = useState();
-
   // 입력 불가 단어
   let forbiddenWord = ["<", ">", ":", '"', "/", "\\", "|", "?", "*", " "];
 
-  // Redux에 저장된 로그인한 유저 ID
-  // let id = useSelector((state) => state.userId);
+  // localStorage에 저장된 로그인한 유저 ID
   let id = localStorage.getItem("userId");
 
+  // 고정 확장자 목록
+  let [fixedList, setFixedList] = useState(
+    JSON.parse(localStorage.getItem("fixedList"))
+  );
+
+  // 커스텀 확장자 목록
+  const [customList, setCustomList] = useState(
+    JSON.parse(localStorage.getItem("customList"))
+  );
   // 커스텀 확장자 입력 텍스트
   const [customInputText, setCustomInputText] = useState("");
-
-  // 커스텀 확장자 입력시 입력할 수 있는 최대 길이
-  const maxInputTextLength = 20;
-
-  // 커스텀 확장자 이름 목록
-  const [customList, setCustomList] = useState();
   // 만들어진 커스텀 확장자의 갯수
   const [customListCount, setCustomListCount] = useState(0);
 
-  // 최대 입력 가능 갯수
+  // 커스텀 확장자 입력시 입력할 수 있는 최대 길이
+  const maxInputTextLength = 20;
+  // 커스텀 확장자 최대 입력 가능 갯수
   const maxCustomListCount = 200;
 
   useEffect(() => {
-    // 고정 확장자 정보 불러오기
-    let url = process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
-    GetData(url, setFixedList);
+    const Data = async () => {
+      try {
+        // 고정 확장자 정보 불러오기
+        let url =
+          process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
+        let response = await GetData(url, setFixedList);
+        if (response.error === null) {
+          // 불러온 데이터 저장
+          setFixedList(response);
+          // 로컬스토리지 저장
+          localStorage.setItem("fixedList", JSON.stringify(response));
+        } else {
+          console.error("GetData error : ", response.error);
+          alert("실패 : " + response.error);
+        }
 
-    // 커스텀 확장자 정보 물러오기
-    url = process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
-    GetData(url, setCustomList);
+        // 커스텀 확장자 정보 불러오기
+        url =
+          process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
+        response = await GetData(url, setFixedList);
+        if (response.error === null) {
+          // 불러온 데이터 저장
+          setCustomList(response);
+          // 로컬스토리지 저장
+          localStorage.setItem("customList", JSON.stringify(response));
+        } else {
+          console.error("GetData error : ", response.error);
+          alert("실패 : " + response.error);
+        }
+        // 커스텀 확장자 갯수 저장
+        response && setCustomListCount(response.customName.length);
+      } catch (error) {
+        console.error("Error in fetchData:", error);
+        // 오류 처리를 원하는 방식으로 추가하세요
+      }
+    };
 
-    // 커스텀 확장자 갯수 저장
-    customList && setCustomListCount(customList.customName.length);
+    Data(); // 비동기 함수 호출
   }, []);
 
   useEffect(() => {
@@ -55,136 +84,188 @@ function MainPage() {
           `더이상 문자를 입력할 수 없습니다(최대 길이 ${maxInputTextLength}자)`
         );
       }
-
       // customInputText에 변경된 값 저장
       setCustomInputText(e.target.value);
     }
   };
-
+  const CustomAddData = (addData) => {
+    // 데이터 추가
+    const copyData = [...customList.customName, addData];
+    // 배열을 정렬
+    copyData.sort();
+    // 업데이트할 데이터 생성
+    const updatedData = {
+      ...customList,
+      customName: copyData,
+    };
+    // 데이터 업데이트합니다.
+    setCustomList(updatedData);
+  };
+  const CustomDeleteData = (deleteData) => {
+    const copyData = [...customList.customName];
+    // 데이터 삭제
+    const filterData = copyData.filter((item) => item !== deleteData);
+    // 업데이트할 데이터 생성
+    const updatedData = {
+      ...customList,
+      customName: filterData,
+    };
+    // 데이터 업데이트합니다.
+    setCustomList(updatedData);
+  };
   // 커스텀 확장자 추가
-  const createDiv = () => {
-    // 1.소문자로 변환
+  const CreateCustom = async () => {
+    // 1. 소문자로 변환
     let lowerCase = customInputText.toLowerCase();
+    try {
+      if (customListCount === maxCustomListCount) {
+        // 2. customListCount가 200 이면 추가 불가능
+        alert(
+          `더이상 확장자 추가가 불가능 합니다(최대 갯수 ${maxCustomListCount})`
+        );
+      } else if (lowerCase[0] !== ".") {
+        // 3. 마침표로 시작하지 않으면 불가능
+        alert("올바른 파일 형식이 아닙니다(마침표로 시작하는지 확인해 주세요)");
+      } else if (fixedList.fixedName.some((word) => lowerCase === word)) {
+        // 4. 고정확장자에 있으면 생성하지 않는다
+        alert("고정 확장자에 있는 확장자입니다");
+      } else if (
+        customList &&
+        customList.customName &&
+        customList.customName.some((word) => lowerCase === word)
+      ) {
+        // 5. 커스텀 확장자 중복 확인
+        alert("이미 만들어진 확장자입니다");
+      } else {
+        //프론트 데이터 추가
+        CustomAddData(lowerCase);
+        // 입력 초기화
+        setCustomInputText("");
 
-    if (customListCount === maxCustomListCount) {
-      // 2.customListCount가 200 이면 추가 불가능
-      alert(
-        `더이상 확장자 추가가 불가능 합니다(최대 갯수${maxCustomListCount})`
-      );
-      // 3.마침표으로 시작하지 않으면 불가능
-    } else if (lowerCase[0] !== ".") {
-      alert("올바른 파일 형식이 아닙니다(마침표로 시작하는지 확인해 주세요)");
-    }
-    // 4.고정확장자에 있으면 생성하지 않는다
-    else if (fixedList.fixedName.some((word) => lowerCase === word)) {
-      alert("고정 확장자에 있는 확장자 입니다");
-    }
-    // 5.커스텀 확장자 중복 확인
-    else if (
-      customList &&
-      // customList.customName && // 테스트 필요
-      customList.customName.some((word) => lowerCase === word)
-    ) {
-      alert("이미 만들어진 확장자 입니다");
-    } else {
-      const url = process.env.REACT_APP_BACKEND_URL + "custom/save";
-      const data = {
-        userId: id,
-        name: lowerCase,
-      };
-      try {
-        // DB 저장 요청
-        PostData(url, data).then((response) => {
-          if (response.data === "success") {
-            const url =
-              process.env.REACT_APP_BACKEND_URL +
-              "custom/getcustom?userId=" +
-              id;
-            GetData(url, setCustomList);
-            // 입력 필드 초기화
-            setCustomInputText("");
-          } else {
-            console.log("PostData error : " + response.data);
-            alert("실패 : ", response.data);
-          }
-        });
-      } catch (error) {
-        alert(error);
+        const url = process.env.REACT_APP_BACKEND_URL + "custom/save";
+        const data = {
+          userId: id,
+          name: lowerCase,
+        };
+        // 서버에 저장 요청
+        const response = await PostData(url, data);
+
+        if (response.data === "success") {
+          // 성공적으로 저장되었을 때, 업데이트된 커스텀 리스트를 다시 가져온다.
+          const updatedUrl =
+            process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
+          const updatedCustomList = await GetData(updatedUrl);
+          // 로컬 스토리지에 저장
+          localStorage.setItem("customList", JSON.stringify(updatedCustomList));
+        } else {
+          // 미리 추가했던 데이터 삭제
+          CustomDeleteData(lowerCase);
+          setCustomInputText(lowerCase);
+          console.log("PostData error : " + response.data);
+          alert("실패 : ", response.data);
+        }
       }
+    } catch (error) {
+      // 실패시 추가했던 데이터 삭제
+      CustomDeleteData(lowerCase);
+      console.log("error : " + error);
+      alert(error);
     }
   };
 
   // 커스텀 삭제
-  const deleteDiv = (index) => {
-    // 삭제될 커스텀 확장자
+  const DeleteCustom = async (index) => {
     const deletedText = customList.customName[index];
-
-    const url = process.env.REACT_APP_BACKEND_URL + "custom/delete";
-    const data = {
-      userId: id,
-      name: deletedText,
-    };
-    // 삭제 요청
     try {
-      PostData(url, data).then((response) => {
-        if (response.data === "success") {
-          const url =
-            process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
-          GetData(url, setCustomList);
-        } else {
-          console.log("PostData error : " + response.data);
-          alert("실패 : ", response.data);
-        }
-      });
+      // 프롡트 데이터 삭제
+      CustomDeleteData(deletedText);
+
+      const url = process.env.REACT_APP_BACKEND_URL + "custom/delete";
+      const data = {
+        userId: id,
+        name: deletedText,
+      };
+
+      // 서버에 삭제 요청
+      const response = await PostData(url, data);
+      if (response.data === "success") {
+        // 삭제 요청이 성공한 경우, 업데이트된 커스텀 리스트를 다시 가져옴
+        const updatedUrl =
+          process.env.REACT_APP_BACKEND_URL + "custom/getcustom?userId=" + id;
+        const updatedCustomList = await GetData(updatedUrl);
+        // 커스텀리스트 업데이트
+        localStorage.setItem("customList", JSON.stringify(updatedCustomList));
+        // setCustomList(updatedCustomList);
+      } else {
+        // 삭제했던 데이터 생성
+        CustomAddData(deletedText);
+        console.log("PostData error : " + response.data);
+        alert("실패 : ", response.data);
+      }
     } catch (error) {
+      // 삭제했던 데이터 생성
+      CustomAddData(deletedText);
+      console.log("error : " + error);
       alert(error);
     }
   };
 
   // 체크박스 상태 변화
-  const handleCheckboxChange = (label) => (e) => {
-    const data = {
-      userId: id,
-      fixedName: label,
-    };
+  const handleCheckboxChange = (label, index) => async (e) => {
+    let updatedFixed = { ...fixedList };
+    try {
+      if (e.target.checked) {
+        // 프론트 체크 상태 변환
+        updatedFixed.fixedStatus[index] = true;
+        setFixedList(updatedFixed);
 
-    //체크가 되었을떄
-    if (e.target.checked) {
-      const url = process.env.REACT_APP_BACKEND_URL + "fixed/savefixtouser";
-      // DB에 저장 요청
-      PostData(url, data)
-        .then((response) => {
-          if (response.data === "success") {
-            const url =
-              process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
-            GetData(url, setFixedList);
-          } else {
-            console.log("PostData error : " + response.data);
-            alert("실패 : ", response.data);
-          }
-        })
-        .catch((error) => {
-          console.error("오류 발생:", error);
-        });
-    } else if (!e.target.checked) {
-      const url = process.env.REACT_APP_BACKEND_URL + "fixed/deletefixtouser";
-      // DB에 삭제 요청
-      PostData(url, data)
-        .then((response) => {
-          if (response.data === "success") {
-            // 저장된 정보 불러오기
-            const url =
-              process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
-            GetData(url, setFixedList);
-          } else {
-            console.log("PostData error : " + response.data);
-            alert("실패 : ", response.data);
-          }
-        })
-        .catch((error) => {
-          console.error("오류 발생:", error);
-        });
+        const url = process.env.REACT_APP_BACKEND_URL + "fixed/savefixtouser";
+        const data = {
+          userId: id,
+          fixedName: label,
+        };
+        // DB에 저장 요청
+        const response = await PostData(url, data);
+        if (response.data === "success") {
+          const url =
+            process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
+          const updatedFixedList = await GetData(url);
+          localStorage.setItem("fixedList", JSON.stringify(updatedFixedList));
+        } else {
+          updatedFixed.fixedStatus[index] = false;
+          setFixedList(updatedFixed);
+          console.log("PostData error : " + response.data);
+          alert("실패 : ", response.data);
+        }
+      } else if (!e.target.checked) {
+        // 체크 상태 변환
+        updatedFixed.fixedStatus[index] = false;
+        setFixedList(updatedFixed);
+
+        const url = process.env.REACT_APP_BACKEND_URL + "fixed/deletefixtouser";
+        const data = {
+          userId: id,
+          fixedName: label,
+        };
+        // DB에 삭제 요청
+        const response = await PostData(url, data);
+        if (response.data === "success") {
+          const url =
+            process.env.REACT_APP_BACKEND_URL + "fixed/getfixed?userId=" + id;
+          const updatedFixedList = await GetData(url);
+          localStorage.setItem("fixedList", JSON.stringify(updatedFixedList));
+        } else {
+          console.log("PostData error : " + response.data);
+          alert("실패 : ", response.data);
+        }
+      }
+    } catch (error) {
+      console.log("error : " + error);
+      alert(error);
     }
+
+    // fixedList.fixedStatus[index]
+    //체크가 되었을떄
   };
 
   return (
@@ -205,7 +286,7 @@ function MainPage() {
                 {label}
                 <input
                   type="checkbox"
-                  onChange={handleCheckboxChange(label)}
+                  onChange={handleCheckboxChange(label, index)}
                   checked={fixedList.fixedStatus[index]}
                   style={{ marginLeft: "5px" }}
                 />
@@ -220,7 +301,7 @@ function MainPage() {
           onChange={handleInputChange}
           placeholder="텍스트 입력"
         />
-        <button onClick={createDiv}>텍스트를 추가</button>
+        <button onClick={CreateCustom}>텍스트를 추가</button>
         <div>
           <p>
             고정확장자의 현재 갯수: {customListCount}/{maxCustomListCount}
@@ -238,7 +319,7 @@ function MainPage() {
                 }}
               >
                 {text}
-                <button onClick={() => deleteDiv(index)}>삭제</button>
+                <button onClick={() => DeleteCustom(index)}>삭제</button>
               </div>
             ))
           ) : (

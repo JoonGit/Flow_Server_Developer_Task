@@ -1,32 +1,27 @@
 import axios from "axios";
 
-const GetData = function (url, setFunc) {
+const GetData = async (url) => {
   try {
-    axios.get(url).then((response) => {
-      if (response.data.error === null) {
-        setFunc(response.data);
-      } else {
-        console.log("GetData error : " + response.data.error);
-        alert("실패 : ", response.data.error);
-      }
-    });
+    const response = await axios.get(url);
+    return response.data;
   } catch (error) {
-    console.log("GetData error : " + error);
-    alert("실패 : ", error);
+    console.error("GetData error : ", error);
+    alert("실패 : " + error.message);
   }
 };
 
-function PostData(url, data) {
+const PostData = async (url, data) => {
   try {
-    return axios.post(url, data, {
+    const response = await axios.post(url, data, {
       headers: {
         "Content-Type": "application/json",
       },
     });
+    return response;
   } catch (error) {
     console.log("PostData error : " + error);
     alert("실패 : ", error);
   }
-}
+};
 
 export { GetData, PostData };
